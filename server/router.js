@@ -3,10 +3,15 @@ const controller = require('./controller.js');
 const router = express.Router();
 
 
-//code here  
+//router for querying API
 router.post('/search', controller.getResults, (req, res) => {
-  console.log('in the router');
   res.status(200).json(res.locals);
 });
+
+
+//router for adding accommodations
+router.post('/add', (req, res) => {
+  res.status(200).json();
+})
 
 module.exports = router;
