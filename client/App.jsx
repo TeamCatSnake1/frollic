@@ -5,9 +5,14 @@ import SignUp from './components/SignUp.jsx';
 import Navbar from './components/Navbar.jsx';
 import MainContainer from './components/MainContainer.jsx';
 import Login from './components/Login.jsx'
+import * as actions from './actions/actions.js'
 
 const mapStateToProps = (state) => ({
   page: state.search.page
+})
+
+const mapDispatchToProps = dispatch => ({
+  changePage: (pl) => dispatch(actions.changePage(pl))
 })
 
 const App = (props) => {
@@ -22,8 +27,9 @@ const App = (props) => {
     <section>
       <Navbar />
       {currPage}
+      <button onClick={() => props.changePage('main')}>Dev skip to main page</button>
     </section>
   )
 };
 
-export default connect(mapStateToProps, null)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

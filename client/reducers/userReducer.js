@@ -5,19 +5,21 @@ const initialState = {
   password: 'password',
   location: 'location',
   displayName: 'display name',
+  accommodations: ['Wheelchair Accessable'],
   failedAuthStatement: ''
 }
 
 const userReducer = (state = initialState, action) => {
   switch(action.type) {
     case types.SUCCESSFUL_AUTH:
-      const { username, location, displayName } = action.payload;
+      const { username, location, displayName, accommodations } = action.payload;
 
       return {
         ...state,
         username,
         location,
         displayName,
+        accommodations,
         failedAuthStatement: ''
       }
 

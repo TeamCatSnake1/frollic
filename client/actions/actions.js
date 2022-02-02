@@ -1,8 +1,10 @@
 import * as types from '../constants/actionTypes';
 import axios from 'axios';
 
-export const getResults = (location, radius, categories) => (dispatch) => {
-  
+export const getResults = (location, radius, categories, accommodations) => (dispatch) => {
+  console.log(accommodations)
+
+
   axios({
     method: 'POST',
     url: `/api/search`,
@@ -12,6 +14,7 @@ export const getResults = (location, radius, categories) => (dispatch) => {
       location: location,
       radius: radius,
       categories: categories,
+      accommodations: accommodations
     }
   })
   .then((response) => {
