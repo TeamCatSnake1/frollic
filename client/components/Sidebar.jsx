@@ -17,6 +17,7 @@ const Sidebar = (props) => {
     let categories = '';
     checkboxes.forEach((el) => categories += ',' + el.name);
     categories = categories.slice(1);
+    console.log('location', location, 'radius', radius, 'categories', categories)
     props.getResults(location, radius, categories);
   }
   //  onSubmit={() => {return false}}
