@@ -12,7 +12,7 @@ app.use('/assets', express.static(path.join(__dirname, '../client/assets')));
 
 app.use((req, res) => {
     console.log('Error: page not found')
-    res.status(400).send('Error: page not found');
+    res.status(404).send('Error: page not found');
 });
 
 app.use((err, req, res, next) => {

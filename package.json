@@ -7,7 +7,7 @@
     "start": "cross-env NODE_ENV=production nodemon server/server.js",
     "build": "cross-env NODE_ENV=production webpack",
     "dev": "concurrently \"cross-env NODE_ENV=development nodemon server/server.js\" \"cross-env NODE_ENV=development webpack serve --open\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --verbose"
   },
   "repository": {
     "type": "git",
@@ -21,10 +21,21 @@
   "author": "Aram Paparian, Katrina Henderson, Wirapa May Boonyasurat, Megan Nadkarni",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Star-Nosed/Moles/issues"
+    "url": "https://github.com/TeamCatSnake1/frollic"
   },
-  "homepage": "https://github.com/Star-Nosed/Moles#readme",
+  "homepage": "https://github.com/TeamCatSnake1/frollic/readme",
   "dependencies": {
+    "@babel/plugin-transform-async-to-generator": "^7.1.0",
+    "@babel/runtime": "^7.1.2",
+    "@testing-library/jest-dom": "^5.15.0",
+    "@testing-library/react": "^12.1.2",
+    "@testing-library/user-event": "^13.5.0",
+    "cross-env": "^5.2.0",
+    "jest-environment-jsdom": "^27.3.1",
+    "node-sass": "^6.0.1",
+    "prop-types": "^15.6.2",
+    "react-test-utils": "^0.0.1",
+    "regenerator-runtime": "^0.13.9",
     "axios": "^0.25.0",
     "bootstrap": "^5.1.3",
     "copy-to-clipboard": "^3.3.1",
@@ -49,6 +60,22 @@
     "url-loader": "^4.1.1"
   },
   "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.1.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^23.6.0",
+    "css-loader": "^6.5.1",
+    "eslint": "^5.6.1",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-react": "^7.11.1",
+    "jest": "^27.3.1",
+    "jest-puppeteer": "^3.4.0",
+    "nodemon": "^1.18.4",
+    "puppeteer": "^1.9.0",
+    "react-test-renderer": "^17.0.2",
+    "style-loader": "^3.3.1",
+    "supertest": "^3.3.0",
     "@babel/core": "^7.16.12",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
