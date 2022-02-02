@@ -50,7 +50,7 @@ const mainReducer = (state = initialState, action) => {
 
       return {
         ...state,
-        comments: state.newComments,
+        comments: newComments,
       }
     case types.TOGGLE_COMMENTS:
       return {
