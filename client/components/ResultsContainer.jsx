@@ -29,6 +29,7 @@ const ResultsContainer = (props) => {
     return (
       <section id="splash">
         <h1>fun with frollic</h1>
+        <h2>yay</h2>
       </section>
     )
   }
