@@ -40,3 +40,8 @@ export const addComment = (number, comment) => ({
 export const toggleComments = () => ({
   type: types.TOGGLE_COMMENTS,
 });
+
+export const changePage = (newPage) => ({
+  type: types.CHANGE_PAGE,
+  payload: newPage
+})
