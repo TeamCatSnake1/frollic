@@ -23,6 +23,47 @@ export const getResults = (location, radius, categories) => (dispatch) => {
   });
 };
 
+export const createAccount = (username, password, displayName, location) => dispatch => {
+  console.log('username', username, 'password', password, 'display name', displayName, 'location', location)
+  if (!username || !password || !displayName || !location) return dispatch({ type: types.UNSUCCESSFUL_AUTH})
+  else {
+    dispatch({
+      type: types.SUCCESSFUL_AUTH,
+      payload: { username: username, displayName: displayName, location: location }
+    })
+    dispatch(changePage('main'));
+  }
+  // axios({
+  //   method: 'POST',
+  //   url: `/authentication`,
+  //   headers: { 'Content-Type': 'application/JSON' },
+  //   data: {
+  //     username: username,
+  //     password: password,
+  //     location: location,
+  //     displayName: displayName
+  //   }
+  // })
+  // .then((response) => {
+  //   console.log(response.data)
+  //   dispatch({
+  //     type: types.CREATE_ACCOUNT,
+  //     payload: response.data,
+  //   });
+  // });
+}
+
+export const login = (username, password) => dispatch => {
+  if (!username || !password) return dispatch({ type: types.UNSUCCESSFUL_AUTH })
+  else {
+    dispatch({
+      type: types.SUCCESSFUL_AUTH,
+      payload: { username: username }// add stuff based off the readme when you pull down
+    })
+    dispatch(changePage('main'));
+  }
+}
+
 export const addFav = (favorite) => ({
   type: types.ADD_FAV,
   payload: favorite,

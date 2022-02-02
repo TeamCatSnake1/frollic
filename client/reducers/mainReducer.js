@@ -18,6 +18,7 @@ const mainReducer = (state = initialState, action) => {
         ...state,
         page: action.payload
       }
+
     case types.GET_RESULTS:
 
     return {
