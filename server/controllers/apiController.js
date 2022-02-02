@@ -1,8 +1,8 @@
 const axios = require('axios');
 
-const controller = {};
+const apiController = {};
 
-controller.getResults = (req, res, next) => {
+apiController.getResults = (req, res, next) => {
   // console.log(req);
 
 
@@ -46,4 +46,4 @@ controller.getResults = (req, res, next) => {
 }
 
 
-module.exports = controller;
+module.exports = apiController;
