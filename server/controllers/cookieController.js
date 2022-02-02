@@ -20,7 +20,7 @@ cookieController.setSSIDCookie = (req, res, next) =>{
     res.locals.ssid = newSSID;
     console.log('Setting a cookie: ', res.locals.ssid)
 
-    return next();
+    next();
 
 };
 

@@ -4,7 +4,7 @@ CREATE TABLE "user" (
 	"displayName" VARCHAR(255) NOT NULL,
 	"defaultLocation" VARCHAR(255) NOT NULL,
 	"sessionId" VARCHAR(255) NOT NULL,
-	"sessionExpiration" integer NOT NULL,
+	"sessionExpiration" bigint NOT NULL,
 	CONSTRAINT "user_pk" PRIMARY KEY ("username")
 ) WITH (
   OIDS=FALSE

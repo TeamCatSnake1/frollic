@@ -1,4 +1,4 @@
-//import the DB
+const db = require('../model/databaseModel.js')
 
 const sessionController = {};
 
@@ -14,16 +14,14 @@ sessionController.addSession = (req, res, next) =>{
 const { ssid, username } = res.locals;
 const expiry = Date.now() + (60000*2) //expires in 2 mins -- for testing.
 
-
 //I have not done UPDATE before. Dunno if this is gonna work? We can create a session row for each user
 //at and only at the time we generate the user acct too.
 //This way when we make a session there is no conflict with trying to add a user that already exists.
 db.query(`
-    UPDATE user (sessionId, sessionExpiration)
-    VALUES ('${ssid}, '${expiry}')
-    WHERE username.username = ${username}
+    UPDATE public.user SET "sessionId"='${ssid}', "sessionExpiration"=${expiry} WHERE username='${username}';
     `)
-    .then(() => {
+    .then((result) => {
+        console.log('update db ')
         return next();
     })
     .catch(err => next({
@@ -34,11 +32,12 @@ db.query(`
 
 sessionController.verifySession = (req, res, next) =>{
 //req.cookies 
-
     if (!req.cookies.ssid){
         //no valid cookie ssid, so skip the DB query
         return next()
     }
+
+    console.log('setting date')
     const currentTime = Date.now();
     //if there was a sessionId let's check the DB.
     db.query(`
