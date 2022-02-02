@@ -8,12 +8,14 @@ export const getResults = (location, radius, categories) => (dispatch) => {
     url: `/api/search`,
     headers: { 'Content-Type': 'application/JSON' },
     data: {
+      // accomodations: []
       location: location,
       radius: radius,
       categories: categories,
     }
   })
   .then((response) => {
+    console.log(response.data)
     dispatch({
       type: types.GET_RESULTS,
       payload: response.data,
