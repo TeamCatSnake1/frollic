@@ -89,7 +89,7 @@ authController.verifyUser = (req, res, next) =>{
 }
 
 authController.logOut = (req, res, next) => {
-    res.clearCookie(ssid);
+    res.clearCookie('ssid');
     res.locals.valid = true;
     return next()
 }

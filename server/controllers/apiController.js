@@ -68,7 +68,6 @@ apiController.getAccommodationsForVenues = (req, res, next) => {
   const { accommodations } = req.body;
 
   try {
-    console.log('trying to query accoms')
     multipleQuery();
   } catch {
     next({
@@ -109,8 +108,7 @@ apiController.getAccommodationsForVenues = (req, res, next) => {
         [0] ]
         //res.locals needs to be populated here
         */
-        console.log('found this result')
-        console.log(result.rows)
+
 
       })
       .catch(err => next({
@@ -126,10 +124,12 @@ apiController.getAccommodationsForVenues = (req, res, next) => {
 }
 
 apiController.addAccommodationToVenue = (req, res, next) => {
-  const { accommodation, venueId, venueName } = req.body; 
-  let venueQuery = `SELECT * FROM venue WHERE "venueName" = '${venueName}'`
-  let query = ``
 
+  const { accommodation, accomType, venueId, venueName } = req.body; 
+  const venueNameSanitized = venueName.replaceAll("'", "''");
+  let venueQuery = `SELECT * FROM venue WHERE "venueName" = '${venueNameSanitized}'`
+  let accomQuery = `SELECT * FROM accommodation WHERE "accommodation" = '${accommodation[0]}'`
+  let query = ``
 
   try {
     multQuery();
@@ -145,18 +145,27 @@ apiController.addAccommodationToVenue = (req, res, next) => {
     await db.query(venueQuery)
     .then(result => {
         if (result.rows[0] === undefined){
-          query += `INSERT INTO venue ("venueId", "venueName") VALUES ('${venueId}', '${venueName}'); `
+          query += `INSERT INTO venue ("venueId", "venueName") VALUES ('${venueId}', '${venueNameSanitized}'); `
           
         }
     })
     
+    await db.query(accomQuery)
+      .then(result => {
+        if (result.rows[0] === undefined){
+          query += `INSERT INTO accommodation ("accommodation", "accommodationType") VALUES ('${accommodation}', '${accomType}'); `
+        }
+    })
+    
     for (let i = 0; i < accommodation.length; i++){
+      
       let base = `INSERT INTO public.venue_accommodation (accommodation, "venueId") VALUES ('${accommodation[i]}', '${venueId}'); `
       query += base;
     }
       db.query(query)
         .then(result => {
           res.locals.valid = true;
+          res.locals.accommodation = accommodation[0];
           return next()
         })
         .catch(err => next({
@@ -183,6 +192,23 @@ apiController.addAccommodationToVenue = (req, res, next) => {
           message: {err: 'Error at apiController.addNewAccomm. Check server logs for details.'}
       }));
       
+  }
+
+  apiController.getAccommodations = (req, res, next) => {
+    db.query('SELECT accommodation FROM accommodation;')
+      .then(result => {
+        console.log(result.rows)
+        const accomList = [];
+        for (const elem of result.rows){
+          accomList.push(elem.accommodation);
+        }
+        res.locals.accommodations = accomList;
+        return next();
+      })
+      .catch(err => next({
+        log: `apiController.getAccommodations: ERROR: ${typeof err === 'object' ? JSON.stringify(err) : err}`,
+        message: {err: 'Error at apiController.getAccommodations. Check server logs for details.'}
+    }));
   }
 /*
   POST /ACC

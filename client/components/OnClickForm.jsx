@@ -11,11 +11,15 @@ const mapDispatchToProps = dispatch => ({
 })
 
 const OnClickForm = props => {
+  const selector = React.createRef()
+
   const handleClick = (e) => {
     e.preventDefault();
+    const accomType = selector.current.value;
+    const accommodation = [];
 
-    const accommodation = window.prompt('Please enter the accommodation you would like to submit: ');
-    accomType = document.querySelector(`select[name="${props.venueId}"]`).value;
+    
+    accommodation.push(window.prompt('Please enter the accommodation you would like to submit: '));
 
     props.addAccommodation(props.venueId, accommodation, accomType, props.venueName)
   }
@@ -27,10 +31,10 @@ const OnClickForm = props => {
   return (
     <form onSubmit={props.handleSubmit}>
       <label htmlFor="radius" className="side-header">Select Type</label><br/>
-      <select name={props.venueId}>
+      <select name={props.venueId} ref={selector}>
         {getTypes()}
       </select><br/>
-      <button className="addFav" onClick={handleClick}>Submit new Accommodation</button>
+      <button className="addFav" onClick={handleClick}>Choose Accommodations</button>
     </form>
   );
 }
