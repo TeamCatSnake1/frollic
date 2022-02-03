@@ -7,11 +7,18 @@ const initialState = {
   favsPageOn: false,
   firstRender: true,
   comments: [],
+  page: 'signUp'
 };
 
 const mainReducer = (state = initialState, action) => {
 
   switch (action.type) {
+    case types.CHANGE_PAGE:
+      return {
+        ...state,
+        page: action.payload
+      }
+
     case types.GET_RESULTS:
 
     return {
@@ -50,7 +57,7 @@ const mainReducer = (state = initialState, action) => {
 
       return {
         ...state,
-        comments: state.newComments,
+        comments: newComments,
       }
     case types.TOGGLE_COMMENTS:
       return {

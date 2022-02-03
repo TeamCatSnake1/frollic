@@ -2,6 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../actions/actions';
 
+const mapStateTopProps = state => ({
+  accommodationsArray: state.user.accommodations
+})
+
 const mapDispatchToProps = (dispatch) => ({
   getResults: (location, radius, categories) => {
     dispatch(actions.getResults(location, radius, categories));
@@ -14,11 +18,28 @@ const Sidebar = (props) => {
     const location = document.querySelector('input[name="location"]').value;
     const radius = document.querySelector('select[name="radius"]').value;
     const checkboxes = document.querySelectorAll('input[type=checkbox]:checked');
+
     let categories = '';
-    checkboxes.forEach((el) => categories += ',' + el.name);
+    const accommodations = [];
+    checkboxes.forEach((el) => {
+      if (el.variant === 'locType') categories += ',' + el.name
+      else if (el.variant === 'accType') accommodations.push(el.name)
+    });
     categories = categories.slice(1);
     console.log('location', location, 'radius', radius, 'categories', categories)
-    props.getResults(location, radius, categories);
+    props.getResults(location, radius, categories, accommodations);
+  }
+
+  const buildAccommodationsBoxes = () => {
+    const output = [];
+    props.accommodationsArray.forEach((accom, ind) => {
+      output.push(<div className="checkbox" key={`aCB${ind}`}>
+        <input type="checkbox" name={accom} variant="accType"></input>
+        <label>{accom}</label><br/>
+      </div>)
+    })
+
+    return output;
   }
   //  onSubmit={() => {return false}}
   return (
@@ -51,41 +72,46 @@ const Sidebar = (props) => {
             </div>
 
             <div className="checkbox">
-            <input type="checkbox" name="bars"></input>
-            <label htmlFor="Bar">Bar</label><br/>
+            <input type="checkbox" name="bars" variant="locType"></input>
+            <label htmlFor="Bar" variant="locType">Bar</label><br/>
             </div>
           
             <div className="checkbox">
-            <input type="checkbox" name="coffee"></input>
+            <input type="checkbox" name="coffee" variant="locType"></input>
             <label htmlFor="Coffee &amp; Tea">Coffee &amp; Tea</label><br/>
             </div>
           
             <div className="checkbox">
-            <input type="checkbox" name="desserts"></input>
+            <input type="checkbox" name="desserts" variant="locType"></input>
             <label htmlFor="Desserts">Desserts</label><br/>
             </div>
           
             <div className="checkbox">
-            <input type="checkbox" name="restaurants"></input>
+            <input type="checkbox" name="restaurants" variant="locType"></input>
             <label htmlFor="Restaurants">Restaurants</label><br/>
             </div>
 
             <div className="checkbox">
-            <input type="checkbox" name="movietheaters"></input>
+            <input type="checkbox" name="movietheaters" variant="locType"></input>
             <label htmlFor="Cinema">Cinema</label><br/>
             </div>
 
             <div className="checkbox">
-            <input type="checkbox" name="musicvenues"></input>
+            <input type="checkbox" name="musicvenues" variant="locType"></input>
             <label htmlFor="Music Venues">Music Venues</label><br/>
             </div>
 
             <div className="checkbox">
-            <input type="checkbox" name="shopping"></input>
+            <input type="checkbox" name="shopping" variant="locType"></input>
             <label htmlFor="Shopping">Shopping</label><br/>
             </div>
 
           </div>
+          <p className="side-header">What type of accommodations are you looking for?</p>
+          <div className="checkboxes">
+            {buildAccommodationsBoxes()}
+          </div>
+
         </div>
         <button id="search" onClick={handleClick}>Search</button>
 
@@ -94,4 +120,4 @@ const Sidebar = (props) => {
   )
 };
 
-export default connect(null, mapDispatchToProps)(Sidebar);
+export default connect(mapStateTopProps, mapDispatchToProps)(Sidebar);
