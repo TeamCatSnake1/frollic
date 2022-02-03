@@ -24,8 +24,10 @@ authRouter.post('/login',
 
 //router for signup
 authRouter.post('/signup', 
-authController.addUser, 
-cookieController.setSSIDCookie, sessionController.addSession, apiController.getAccommodations, (req, res) => {
+      authController.addUser, 
+      cookieController.setSSIDCookie, 
+      sessionController.addSession, 
+      apiController.getAccommodations, (req, res) => {
   res.status(200).json(res.locals);
 })
 
