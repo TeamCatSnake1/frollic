@@ -1,29 +1,33 @@
 import React from 'react';
 import { connect } from 'react-redux';
-
 import SignUp from './components/SignUp.jsx';
 import Navbar from './components/Navbar.jsx';
 import MainContainer from './components/MainContainer.jsx';
 import Profile from './components/Profile.jsx';
 import Login from './components/Login.jsx';
 import * as actions from './actions/actions.js';
+import LoginSignupDisplay from './components/LoginSignupDisplay.jsx';
 
 const mapStateToProps = (state) => ({
   page: state.search.page
 })
 
 const mapDispatchToProps = dispatch => ({
-  changePage: (pl) => dispatch(actions.changePage(pl))
+  changePage: (pl) => dispatch(actions.changePage(pl)),
 })
 
 const App = (props) => {
+
+
+
   let currPage;
-  console.log(props.page)
+
 
   if (props.page === 'signUp') currPage = <SignUp />;
   else if (props.page === 'login') currPage = <Login />;
   else if (props.page === 'main') currPage = <MainContainer />;
   else if (props.page === 'profile') currPage = <Profile />;
+  else if (props.page === 'loginSignup') currPage = <LoginSignupDisplay />;
   else currPage = <h1>Invalid page please refresh</h1>;
 
   return (

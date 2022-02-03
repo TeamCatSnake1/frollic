@@ -16,6 +16,8 @@ authRouter.post('/login',
         apiController.getAccommodations, (req, res) => {
           if (res.locals.valid){
             res.status(200).json(res.locals);
+          } else if (res.locals.username === 'cookieEvaluation' && res.locals.SSIDValidated === false && res.locals.valid === false){
+            res.status(200).json(res.locals);
           } else {
             res.status(403).json("Invalid username or password.")
           }

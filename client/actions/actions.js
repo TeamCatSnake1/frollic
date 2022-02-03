@@ -12,7 +12,7 @@ export const logout = () => dispatch => {
     if (response.data.valid) {
       dispatch({
         type: types.CHANGE_PAGE,
-        payload: 'signUp'
+        payload: 'loginSignup'
       });
     }
     else window.alert('Failed to logout. Please try again or wait for your session to expire.');
@@ -100,7 +100,7 @@ export const createAccount = (username, password, displayName, location) => disp
 }
 
 export const login = (username, password, cookieAuth = false) => dispatch => {
-  if (!username || !password) return dispatch({ type: types.UNSUCCESSFUL_AUTH })
+  if (!username || !password) return dispatch({ type: types.UNSUCCESSFUL_AUTH})
   else {
     axios({
       method: 'POST',
@@ -112,6 +112,7 @@ export const login = (username, password, cookieAuth = false) => dispatch => {
       }
     })
     .then((res) => {
+      if (!res.data.valid) return dispatch({type: types.UNSUCCESSFUL_AUTH})
       dispatch({
         type: types.SUCCESSFUL_AUTH,
         payload: { username: res.data.username, displayName: res.data.displayName, location: res.data.defaultLocation, accommodations: res.data.accommodations }

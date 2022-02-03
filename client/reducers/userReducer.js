@@ -25,6 +25,7 @@ const userReducer = (state = initialState, action) => {
       }
 
     case types.UNSUCCESSFUL_AUTH:
+
       return {
         ...state,
         failedAuthStatement: 'Authentication failed please try again.'

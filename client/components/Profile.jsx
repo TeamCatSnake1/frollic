@@ -15,7 +15,10 @@ const Profile = props => {
     <div className="auth">
       <br/>
       <h1>Profile</h1>
-      <button id="search" onClick={handleClick}>Logout</button>
+      <div id="loginPageContainer">
+        <p>Click below to log out.</p>
+        <button id="loginButton" onClick={handleClick}>Logout</button>
+      </div>
     </div>
   )
 }

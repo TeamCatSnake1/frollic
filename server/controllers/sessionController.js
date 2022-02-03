@@ -7,11 +7,9 @@ sessionController.addSession = (req, res, next) =>{
         console.log('skipping session generation, SSID was validated')
         return next();
     }
-    if (res.locals.SSIDValidated === false){
-        if (!req.body.username){
-            console.log('cookie check for auth, no login info supplied')
-            return next();
-        }
+    if (!res.locals.valid){
+        console.log('addSession: invalid user, skipping session generation')
+        return next();
     }
 
 //should follow cookie generation ONLY
@@ -43,8 +41,12 @@ db.query(`
 sessionController.verifySession = (req, res, next) =>{
     //no cookies -> no session. just skip to user verification.
     if (!req.cookies.ssid){
+        console.log('verifySession: no cookie found, skipping session verification.')
+        res.locals.SSIDValidated = false;
+        res.locals.username = req.body.username;
         return next()
     }
+
     const { ssid } = req.cookies;
     const currentTime = Date.now();
     //if there was a sessionId let's check the DB.
@@ -60,7 +62,7 @@ sessionController.verifySession = (req, res, next) =>{
             return next(); 
         } else {
             res.locals.valid = false;
-            res.locals.reason = "SSID validation failed."
+            res.locals.SSIDValidate = false;
             return next();
         }
     })

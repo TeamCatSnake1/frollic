@@ -50,12 +50,13 @@ authController.verifyUser = (req, res, next) =>{
     if (res.locals.SSIDValidated === true){
         return next();
     }
-    if (res.locals.SSIDValidated === false){
-        if (!req.body.username){
-            console.log('cookie check for auth, no login info supplied')
-            return next();
-        }
+    if (res.locals.SSIDValidated === false && req.body.username === 'cookieEvaluation'){
+       console.log('verifyUser: attempted login via cookie, session validation failed')
+       res.locals.failedCookie = true;
+       res.locals.valid = false;
+       return next();
     }
+    
 
     //code to verify user
     const { username, password } = req.body;
@@ -75,10 +76,7 @@ authController.verifyUser = (req, res, next) =>{
                 // res.locals.venues = result.rows[0].venues
 
             }
-
-            // let bytes = CryptoJS.AES.decrypt(ciphertext, 'secret key 123');
-
-            // let orig = bytes.toString(CryptoJS.enc.Utf8);
+            
             return next()
         })
         .catch (err => next({

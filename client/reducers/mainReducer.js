@@ -7,7 +7,7 @@ const initialState = {
   favsPageOn: false,
   firstRender: true,
   comments: [],
-  page: 'signUp'
+  page: 'loginSignup'
 };
 
 const mainReducer = (state = initialState, action) => {
