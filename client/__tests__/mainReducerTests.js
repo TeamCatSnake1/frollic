@@ -9,11 +9,18 @@ const initialState = {
   favsPageOn: false,
   firstRender: true,
   comments: [],
+  page: 'signUp'
 };
 
 test('Should return initial state', () => {
   expect(mainReducer(undefined, '')).toEqual(initialState);
 });
+
+test('Should add an accommodation', () => {
+  const action = { type: types.GET_RESULTS, payload: ['g2g'] };
+
+  expect(mainReducer(initialState, action).searchResults).toEqual(['g2g']);
+})
 
 test('Should get results', () => {
   const action = { type: types.GET_RESULTS, payload: 'g2g' };

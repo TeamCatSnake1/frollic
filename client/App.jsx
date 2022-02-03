@@ -24,7 +24,6 @@ const App = (props) => {
   else if (props.page === 'main') currPage = <MainContainer />;
   else if (props.page === 'profile') currPage = <Profile />;
   else currPage = <h1>Invalid page please refresh</h1>;
-  console.log('In App');
 
   return (
     <section>

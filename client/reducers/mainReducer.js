@@ -24,7 +24,6 @@ const mainReducer = (state = initialState, action) => {
       }
 
     case types.CHANGE_PAGE:
-      console.log('Changing page reducer')
       return {
         ...state,
         page: action.payload

@@ -22,9 +22,9 @@ const Navbar = (props) => {
   <div id="nav">
     <a href="/"><img id="logo" alt="frollic-logo" src="/assets/logo.png"></img></a>
     <div id="profile-container">
-        <button id="profile-icon" onClick={handleClick}>
-            <img src="https://img.icons8.com/small/32/000000/gender-neutral-user.png"/>
-        </button>
+      <button id="profile-icon" onClick={handleClick}>
+          <img src="https://img.icons8.com/small/32/000000/gender-neutral-user.png"/>
+      </button>
     </div>
   </div>
   )

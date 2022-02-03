@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../actions/actions';
 
@@ -9,7 +9,8 @@ const mapDispatchToProps = (dispatch) => ({
     changePage: (payload) => dispatch(actions.changePage(payload)),
     createAccount: (username, password, displayName, location) => {
       dispatch(actions.createAccount(username, password, displayName, location));
-    }
+    },
+    login: (username, password, cookieAuth) => dispatch(actions.login(username, password, cookieAuth))
   });
 
 const SignUp = (props) => {
@@ -23,6 +24,11 @@ const SignUp = (props) => {
     
     props.createAccount(username, password, displayName, location);
   }
+
+  useEffect(() => {
+    console.log('Checking session');
+    props.login('test', 'test', true);
+  })
 
   return (
     <div className="auth">

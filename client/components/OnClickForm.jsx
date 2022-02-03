@@ -7,7 +7,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  addAccommodation: (venueId, accommodation, accomType) => dispatch(actions.addAccommodation(venueId, accommodation, accomType))
+  addAccommodation: (venueId, accommodation, accomType, venueName) => dispatch(actions.addAccommodation(venueId, accommodation, accomType, venueName))
 })
 
 const OnClickForm = props => {
@@ -17,7 +17,7 @@ const OnClickForm = props => {
     const accommodation = window.prompt('Please enter the accommodation you would like to submit: ');
     accomType = document.querySelector(`select[name="${props.venueId}"]`).value;
 
-    props.addAccommodation(props.venueId, accommodation, accomType)
+    props.addAccommodation(props.venueId, accommodation, accomType, props.venueName)
   }
 
   const getTypes = () => {
