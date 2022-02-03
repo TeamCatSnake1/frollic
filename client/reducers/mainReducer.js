@@ -13,6 +13,16 @@ const initialState = {
 const mainReducer = (state = initialState, action) => {
 
   switch (action.type) {
+    case types.ADD_ACCOMMODATIONS:
+      searchResults = searchResults.map(venue => {
+        if (venue.venueId === action.venueId) venue.accommodations.push(action.accommodation)
+      })
+      
+      return {
+        ...state,
+        searchResults
+      }
+
     case types.CHANGE_PAGE:
       return {
         ...state,

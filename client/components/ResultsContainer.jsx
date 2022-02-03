@@ -47,6 +47,8 @@ const ResultsContainer = (props) => {
       rating={resultObj.rating}
       price={resultObj.price}
       distance={resultObj.distance}
+      accomodations={resultObj.accommodations}
+      venueId={resultObj.venueId}
     />
   });
   
