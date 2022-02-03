@@ -6,10 +6,7 @@ export const logout = () => dispatch => {
     method: 'POST',
     url: `/logout`,
     headers: { 'Content-Type': 'application/JSON' },
-    data: {
-      venueId: venueId,
-      accomodation: accommodation
-    }
+    data: {}
   })
   .then((response) => {
     if (response.valid) {
@@ -18,8 +15,11 @@ export const logout = () => dispatch => {
         payload: { page: 'signUp' }
       });
     }
-    else window.alert('Failed to logout. Please try again or wait for your session to expire.')
-  });
+    else window.alert('Failed to logout. Please try again or wait for your session to expire.');
+  }).catch(err => {
+    console.log(err);
+    window.alert('Failed to logout. Please try again or wait for your session to expire.');
+  })
 }
 
 export const addAccommodation = (venueId, accommodation, accomType, venueName) => dispatch => {

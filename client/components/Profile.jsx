@@ -8,7 +8,7 @@ const mapDispatchToProps = dispatch => ({
 
 const Profile = props => {
   const handleClick = () => {
-    props.logout
+    props.logout();
   }
 
   return (
