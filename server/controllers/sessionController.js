@@ -31,25 +31,29 @@ db.query(`
 };
 
 sessionController.verifySession = (req, res, next) =>{
-//req.cookies 
+    //no cookies -> no session. just skip to user verification.
     if (!req.cookies.ssid){
-        //no valid cookie ssid, so skip the DB query
         return next()
     }
 
-    console.log('setting date')
     const currentTime = Date.now();
     //if there was a sessionId let's check the DB.
     db.query(`
-        SELECT username FROM user
-        WHERE sessionId = ${ssid} AND ${currentTime} < sessionExpiration
+        SELECT * FROM public.user
+        WHERE "sessionId"='${ssid}' AND ${currentTime} < "sessionExpiration";
     `)
     .then(res => {
         if (res.rows){
-            //ssid was found. username should be logged in
-            return next();
+            res.locals.username = res.rows[0].username;
+            res.locals.displayName = res.rows[0].displayName;
+            res.locals.defaultLocation = res.rows[0].defaultLocation;
+            res.locals.accommodations = ['wheelchair']
+            res.locals.valid = true;
+            res.locals.SSIDValidated = true;
+            return next(); 
         } else {
-            //ssid was NOT found. username should NOT be logged in.
+            res.locals.valid = false;
+            res.locals.reason = "SSID validation failed."
             return next();
         }
     })
