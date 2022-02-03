@@ -6,7 +6,8 @@ const initialState = {
   location: 'location',
   displayName: 'display name',
   accommodations: [],
-  failedAuthStatement: ''
+  failedAuthStatement: '',
+  accomTypes: ['Mobility', 'Vision', 'Hearing', 'Misc.']
 }
 
 const userReducer = (state = initialState, action) => {

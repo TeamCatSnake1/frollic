@@ -1,10 +1,32 @@
 import * as types from '../constants/actionTypes';
 import axios from 'axios';
 
+export const addAccommodation = (venueId, accommodation, accomType) => dispatch => {
+  axios({
+    method: 'POST',
+    url: `/api/add`,
+    headers: { 'Content-Type': 'application/JSON' },
+    data: {
+      venueId: venueId,
+      accomodation: accommodation
+    }
+  })
+  .then((response) => {
+    if (response.valid) {
+      dispatch({
+        type: types.ADD_ACCOMMODATIONS,
+        payload: {
+          venueId: venueId,
+          accommodation: accommodation,
+          accomType: accomType
+        }
+      });
+    }
+    else window.alert(`Submittal of ${accommodation} failed please try again later.`)
+  });
+};
+
 export const getResults = (location, radius, categories, accommodations) => (dispatch) => {
-  console.log(accommodations)
-
-
   axios({
     method: 'POST',
     url: `/api/search`,
