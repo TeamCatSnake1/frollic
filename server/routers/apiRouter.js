@@ -21,4 +21,5 @@ apiRouter.post('/acc', apiController.addNewAccommodation, (req, res) => {
   res.status(200).json(res.locals);
 })
 
+
 module.exports = apiRouter;
