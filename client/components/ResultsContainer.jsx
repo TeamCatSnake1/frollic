@@ -48,7 +48,7 @@ const ResultsContainer = (props) => {
       price={resultObj.price}
       distance={resultObj.distance}
       accomodations={resultObj.accommodations}
-      venueId={resultObj.venueId}
+      venueId={resultObj.id}
     />
   });
   

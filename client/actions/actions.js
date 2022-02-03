@@ -4,15 +4,15 @@ import axios from 'axios';
 export const logout = () => dispatch => {
   axios({
     method: 'POST',
-    url: `/logout`,
+    url: `/authentication/logout`,
     headers: { 'Content-Type': 'application/JSON' },
     data: {}
   })
   .then((response) => {
-    if (response.valid) {
+    if (response.data.valid) {
       dispatch({
         type: types.CHANGE_PAGE,
-        payload: { page: 'signUp' }
+        payload: 'signUp'
       });
     }
     else window.alert('Failed to logout. Please try again or wait for your session to expire.');
@@ -23,13 +23,16 @@ export const logout = () => dispatch => {
 }
 
 export const addAccommodation = (venueId, accommodation, accomType, venueName) => dispatch => {
+  console.log(venueName)
   axios({
     method: 'POST',
     url: `/api/add`,
     headers: { 'Content-Type': 'application/JSON' },
     data: {
       venueId: venueId,
-      accomodation: accommodation
+      accommodation: accommodation,
+      accomType: accomType,
+      venueName: venueName
     }
   })
   .then((response) => {

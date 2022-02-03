@@ -18,6 +18,7 @@ const mapDispatchToProps = dispatch => ({
 
 const App = (props) => {
   let currPage;
+  console.log(props.page)
 
   if (props.page === 'signUp') currPage = <SignUp />;
   else if (props.page === 'login') currPage = <Login />;
