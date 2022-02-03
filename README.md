@@ -17,7 +17,7 @@ POST /api/search
   response = [ { accommodationsShaved: boolean, venueId: string, accommodations: [string, ...], address: string, distance: string, image: string, name: string, phone: string, price: string, rating: string, url: string }, {...}, ... ]
 
 POST /api/add
-  req.body { accomodation: [strings], venueId: string }
+  req.body { accomodations: [strings], venueId: string }
   response = { valid: boolean }
 
 //stretch(?)
@@ -25,10 +25,14 @@ POST /user/accommodation
   req.body { username: string, accomodations: [string, ...] } // Delete old
   response = { valid: boolean, accomodations: [string, ...] }
 
-POST /ACC
+
+  POST /ACC
   req.body { accName: string, accType: string }
   response { valid: boolean }
 
-venuiId
+
+pr to /logout
+we will delete cookie and send back valid is true
+
 
   

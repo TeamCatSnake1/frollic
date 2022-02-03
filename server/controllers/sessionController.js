@@ -3,6 +3,16 @@ const db = require('../model/databaseModel.js')
 const sessionController = {};
 
 sessionController.addSession = (req, res, next) =>{
+    if (res.locals.SSIDValidated){
+        console.log('skipping session generation, SSID was validated')
+        return next();
+    }
+    if (res.locals.SSIDValidated === false){
+        if (!req.body.username){
+            console.log('cookie check for auth, no login info supplied')
+            return next();
+        }
+    }
 
 //should follow cookie generation ONLY
 //SO -- res.locals.ssid will have the ssid on it
@@ -35,18 +45,15 @@ sessionController.verifySession = (req, res, next) =>{
     if (!req.cookies.ssid){
         return next()
     }
-
+    const { ssid } = req.cookies;
     const currentTime = Date.now();
     //if there was a sessionId let's check the DB.
-    db.query(`
-        SELECT * FROM public.user
-        WHERE "sessionId"='${ssid}' AND ${currentTime} < "sessionExpiration";
-    `)
-    .then(res => {
-        if (res.rows){
-            res.locals.username = res.rows[0].username;
-            res.locals.displayName = res.rows[0].displayName;
-            res.locals.defaultLocation = res.rows[0].defaultLocation;
+    db.query(`SELECT * FROM public.user WHERE "sessionId"='${ssid}'`)
+    .then(result => {
+        if (result.rows && result.rows[0].sessionExpiration > currentTime){
+            res.locals.username = result.rows[0].username;
+            res.locals.displayName = result.rows[0].displayName;
+            res.locals.defaultLocation = result.rows[0].defaultLocation;
             res.locals.accommodations = ['wheelchair']
             res.locals.valid = true;
             res.locals.SSIDValidated = true;
