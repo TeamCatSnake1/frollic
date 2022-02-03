@@ -7,30 +7,34 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  addAccommodation: (venueId, accommodation, accomType) => dispatch(actions.addAccommodation(venueId, accommodation, accomType))
+  addAccommodation: (venueId, accommodation, accomType, venueName) => dispatch(actions.addAccommodation(venueId, accommodation, accomType, venueName))
 })
 
 const OnClickForm = props => {
+  const selector = React.createRef()
+
   const handleClick = (e) => {
     e.preventDefault();
+    const accomType = selector.current.value;
+    const accommodation = [];
 
-    const accommodation = window.prompt('Please enter the accommodation you would like to submit: ');
-    accomType = document.querySelector(`option[name="${props.venueId}"]`).value;
+    
+    accommodation.push(window.prompt('Please enter the accommodation you would like to submit: '));
 
-    props.addAccommodation(props.venueId, accommodation, accomType)
+    props.addAccommodation(props.venueId, accommodation, accomType, props.venueName)
   }
 
   const getTypes = () => {
-    return props.accomTypes.map(type => <option key={type} name={props.venueId}>{type}</option>)
+    return props.accomTypes.map(type => <option key={type} name={type}>{type}</option>)
   }
 
   return (
     <form onSubmit={props.handleSubmit}>
       <label htmlFor="radius" className="side-header">Select Type</label><br/>
-      <select name="accomTypes">
+      <select name={props.venueId} ref={selector}>
         {getTypes()}
       </select><br/>
-      <button className="addFav" onClick={handleClick}>Submit new Accommodation</button>
+      <button className="addFav" onClick={handleClick}>Choose Accommodations</button>
     </form>
   );
 }

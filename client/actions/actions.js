@@ -1,14 +1,38 @@
 import * as types from '../constants/actionTypes';
 import axios from 'axios';
 
-export const addAccommodation = (venueId, accommodation, accomType) => dispatch => {
+export const logout = () => dispatch => {
+  axios({
+    method: 'POST',
+    url: `/authentication/logout`,
+    headers: { 'Content-Type': 'application/JSON' },
+    data: {}
+  })
+  .then((response) => {
+    if (response.data.valid) {
+      dispatch({
+        type: types.CHANGE_PAGE,
+        payload: 'loginSignup'
+      });
+    }
+    else window.alert('Failed to logout. Please try again or wait for your session to expire.');
+  }).catch(err => {
+    console.log(err);
+    window.alert('Failed to logout. Please try again or wait for your session to expire.');
+  })
+}
+
+export const addAccommodation = (venueId, accommodation, accomType, venueName) => dispatch => {
+  console.log(venueName)
   axios({
     method: 'POST',
     url: `/api/add`,
     headers: { 'Content-Type': 'application/JSON' },
     data: {
       venueId: venueId,
-      accomodation: accommodation
+      accommodation: accommodation,
+      accomType: accomType,
+      venueName: venueName
     }
   })
   .then((response) => {
@@ -18,7 +42,8 @@ export const addAccommodation = (venueId, accommodation, accomType) => dispatch 
         payload: {
           venueId: venueId,
           accommodation: accommodation,
-          accomType: accomType
+          accomType: accomType,
+          venueName: venueName
         }
       });
     }
@@ -40,7 +65,6 @@ export const getResults = (location, radius, categories, accommodations) => (dis
     }
   })
   .then((response) => {
-    console.log(response.data)
     dispatch({
       type: types.GET_RESULTS,
       payload: response.data,
@@ -49,7 +73,6 @@ export const getResults = (location, radius, categories, accommodations) => (dis
 };
 
 export const createAccount = (username, password, displayName, location) => dispatch => {
-  console.log('username', username, 'password', password, 'display name', displayName, 'location', location)
   if (!username || !password || !displayName || !location) return dispatch({ type: types.UNSUCCESSFUL_AUTH})
   else {
     axios({
@@ -76,8 +99,8 @@ export const createAccount = (username, password, displayName, location) => disp
   }
 }
 
-export const login = (username, password) => dispatch => {
-  if (!username || !password) return dispatch({ type: types.UNSUCCESSFUL_AUTH })
+export const login = (username, password, cookieAuth = false) => dispatch => {
+  if (!username || !password) return dispatch({ type: types.UNSUCCESSFUL_AUTH})
   else {
     axios({
       method: 'POST',
@@ -89,14 +112,18 @@ export const login = (username, password) => dispatch => {
       }
     })
     .then((res) => {
+      if (!res.data.valid) return dispatch({type: types.UNSUCCESSFUL_AUTH})
       dispatch({
         type: types.SUCCESSFUL_AUTH,
         payload: { username: res.data.username, displayName: res.data.displayName, location: res.data.defaultLocation, accommodations: res.data.accommodations }
       })
       dispatch(changePage('main'));
     }).catch((err) => {
-      console.log(err);
-      dispatch({ type: types.UNSUCCESSFUL_AUTH });
+      if (cookieAuth) return;
+      else {
+        console.log(err);
+        dispatch({ type: types.UNSUCCESSFUL_AUTH });
+      }
     })
   }
 }

@@ -21,7 +21,6 @@ const Sidebar = (props) => {
 
     let categories = '';
     const accommodations = [];
-    console.log(checkboxes.length)
     checkboxes.forEach((el) => {
       if (el.className === 'locType') categories += ',' + el.name
       else if (el.className === 'accType') accommodations.push(el.name)
