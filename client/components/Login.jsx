@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../actions/actions';
 
@@ -24,16 +24,19 @@ const Login = (props) => {
   return (
     <div className="auth">
       <br/>
-      <h1>Login</h1>
-      <button onClick={() => props.changePage('signUp')}>Need an account?</button>
+      <h1>log in to frollic</h1>
 
+    <div id="loginPageContainer">
       <p>Username</p>
-      <input type="text" name="loginUpUserName" placeholder="username1234"></input>
+      <input type="text" name="loginUpUserName" placeholder="Input your Username"></input>
       <p>Password</p>
-      <input type="password" name="loginUpPassword" placeholder="super secure 85"></input>
+      <input type="password" name="loginUpPassword" type="password" placeholder="Input your Password"></input>
       
-      <button onClick={handleClick}>Login</button>
+      <button id="loginButton" onClick={handleClick}>Login</button>
       <p className='center'>{props.failedAuthStatement}</p>
+      <br/>
+      <button id="returnHome" onClick={() => props.changePage('loginSignup')}>Return Home</button>
+      </div>
     </div>
   )
 }

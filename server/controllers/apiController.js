@@ -195,6 +195,11 @@ apiController.addAccommodationToVenue = (req, res, next) => {
   }
 
   apiController.getAccommodations = (req, res, next) => {
+    if (!res.locals.valid){
+      console.log('getAccommodations: skipping accommodation query, invalid login')
+      return next();
+    }
+
     db.query('SELECT accommodation FROM accommodation;')
       .then(result => {
         console.log(result.rows)

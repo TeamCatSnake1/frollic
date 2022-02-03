@@ -1,6 +1,9 @@
 $teal: #22B3A6;
+$darkteal: #1a837a;
 $gold: #f0c25f;
+$darkgold: #d4a847;
 $white: #FFFCF5;
+$offwhite: #f7f4ee;
 $gray: #D0D7DD;
 $black: #2A343A;
 $shadow: rgb(42, 52, 58, .10);
@@ -15,6 +18,7 @@ html, body {
   font-family: 'Roboto', sans-serif;
   background-color: $white;
 }
+
 
 h1 {
   color: $white;
@@ -56,6 +60,9 @@ p {
   // border: #261803 solid 10px;
   border-radius: 10px;
   box-shadow: 3px 3px 8px 1px #2618033b;
+  background-color: $offwhite;
+  margin-left: calc(50vw - 392.5px);  
+
 }
 
 #nav {
@@ -109,6 +116,25 @@ a:hover  {
 
 #main-container {
   height: 100%;
+}
+
+#loginPageContainer {
+  min-height: 30vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  border: 1px solid $gray;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: $white;
+  overflow-y: auto;
+}
+
+#welcomeText {
+  width: 90%;
+  font-size: 14px;
+  align-self: center;
 }
 
 aside {
@@ -178,7 +204,7 @@ input[type=checkbox]{
   grid-template-columns: 1fr 1fr;
 }
 
-#search {
+#search, #returnHome, #loginButton, #createAccountButton {
   background-color: $gold;
   color: $black;
   font-weight: bold;
@@ -192,8 +218,31 @@ input[type=checkbox]{
   margin: 30px 0 0;
 }
 
+
+
+#returnHome, #createAccountButton {
+  background-color: $teal;
+  border: 1px solid $teal;
+  color: $white;
+  max-width: 40%;
+}
+
+#loginButton, #createAccountButton {
+  max-width: 80%;
+}
+
+#search:active, #loginButton:active {
+  background-color: $darkgold;
+}
+
+#returnHome:active, #createAccountButton:active{
+  background-color: $darkteal;
+}
+
+
+
 #results-container {
-  margin-left: 385px;
+  margin-left: 425px;
   display: flex;
   flex-direction: column;
   flex-basis: 300px;
