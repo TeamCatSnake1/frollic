@@ -74,7 +74,7 @@ apiController.getAccommodationsForVenues = (req, res, next) => {
                       SELECT * FROM accommodation 
                       INNER JOIN venue_accommodation ON accommodation.accommodation=venue_accommodation.accommodation
                       INNER JOIN venue ON venue_accommodation."venueId"=venue."venueId"
-                      WHERE venue."venueId"='$1';
+                      WHERE venue."venueId"='${venueId}';
                     `
     let query = 
         {
