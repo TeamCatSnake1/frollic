@@ -3,7 +3,7 @@ Frollic
 An app for finding accessible venues
 
 POST /authentication
-  req.body = { username: string, password: string, displayName: string, location: string(zipcode) }
+  req.body = { username: string, password: string, displayName: string, defaultLocation: string(zipcode) }
   response = if false { valid: false, reason: string }
   response = if true { valid: true, username: string, displayName: string, accommodations: array, venues: array }
 
@@ -24,3 +24,7 @@ POST /api/add
 POST /user/accommodation
   req.body { username: string, accomodations: [string, ...] } // Delete old
   response = { valid: boolean, accomodations: [string, ...] }
+
+
+
+  
