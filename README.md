@@ -34,5 +34,5 @@ POST /user/accommodation
 pr to /logout
 we will delete cookie and send back valid is true
 
-
+on log in we need more middleware to query accom list to send to front end for checkboxes
   
