@@ -32,7 +32,6 @@ const Sidebar = (props) => {
 
   const buildAccommodationsBoxes = () => {
     const output = [];
-    console.log(props.accommodationsArray)
     props.accommodationsArray.forEach((accom, ind) => {
       output.push(<div className="checkbox" key={`aCB${ind}`}>
         <input type="checkbox" name={accom} variant="accType"></input>
