@@ -1,7 +1,16 @@
 const cookieController = {};
 
 cookieController.setSSIDCookie = (req, res, next) =>{
-
+    if (res.locals.SSIDValidated === true){
+        console.log('skipping cookie generation, SSID was validated')
+        return next();
+    }
+    if (res.locals.SSIDValidated === false){
+        if (!req.body.username){
+            console.log('cookie check for auth, no login info supplied')
+            return next();
+        }
+    }
     //generates a pseudo-random SSID string to store in our cookie 
     function SSIDGen() {
         let result = '';

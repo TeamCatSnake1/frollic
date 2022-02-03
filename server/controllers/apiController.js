@@ -10,13 +10,22 @@ apiController.getResults = (req, res, next) => {
   const radius = Math.round((req.body.radius || 5) * 1609.34);
   const location = (req.body.location || 10109);
   const categories = (req.body.categories || []);
-  // console.log(categories);
+  //check accommodations on req.body
+  //if it contains 'wheelchair_accessible'
+
+  let wheelchairSearch = '';
+  req.body.accommodations.forEach(element =>{
+    if (element === 'Wheelchair Accessible'){
+      wheelchairSearch = 'wheelchair_acessible';
+    }
+  })
+
   axios({
     method: 'GET',
     url: 'https://api.yelp.com/v3/businesses/search',
     // data: {},
     params: {
-      'attributes' : 'wheelchair_accessible',
+      'attributes' : wheelchairSearch,
       'radius': radius,
       'location': location,
       'categories': categories,
@@ -47,6 +56,7 @@ apiController.getResults = (req, res, next) => {
   }));
 }
 
+// 
 //not tested
 apiController.getAccommodationsForVenues = (req, res, next) => {
 
@@ -76,22 +86,37 @@ apiController.getAccommodationsForVenues = (req, res, next) => {
                       INNER JOIN venue ON venue_accommodation."venueId"=venue."venueId"
                       WHERE venue."venueId"='${venueId}';
                     `
-    let query = 
-        {
-        text: queryText,
-        values: [venueId]
-        }
+    await db.query(queryText)
+      .then(result =>{
+        //result.rows comin back currrently as...
+        // add the accommodation information to res.locals 
+          // [{... id: SULHf6nGQ8sK0UpG1XU30w, accommodation: ['wheelchair', "braille"]}]
+        /*
+        [0] [
+        [0] [
+        [0]   {
+        [0]     accommodation: 'wheelchair ramps',
+        [0]     accommodationType: 'mobility',
+        [0]     id: 6,
+        [0]     venueId: 'SULHf6nGQ8sK0UpG1XU30w',
+        [0]     venueName: 'Los Tacos No.1'
+        [0]   }
 
-    await db.query(query.text, query.values)
-    .then(result =>{
-      console.log('found this result')
-      console.log(result.rows)
+          {
+            braille menus
+            venueId
+          }
+        [0] ]
+        //res.locals needs to be populated here
+        */
+        console.log('found this result')
+        console.log(result.rows)
 
-    })
-    .catch(err => next({
-      log: `apiController.multipleQuery: ERROR: ${typeof err === 'object' ? JSON.stringify(err) : err}`,
-      message: {err: 'Error at apiController.multipleQuery. Check server logs for details.'}
-  }));
+      })
+      .catch(err => next({
+        log: `apiController.multipleQuery: ERROR: ${typeof err === 'object' ? JSON.stringify(err) : err}`,
+        message: {err: 'Error at apiController.multipleQuery. Check server logs for details.'}
+    }));
     
   }
   return next();
