@@ -32,9 +32,9 @@ authController.addUser = (req, res, next) =>{
         .then(result => {
             res.locals.username = username;
             res.locals.displayName = displayName;
-            res.local.defaultLocation = defaultLocation;
+            res.locals.defaultLocation = defaultLocation;
             res.locals.valid = true;
-            res.locals.accomodations = ['wheelchair'];
+            res.locals.accommodations = ['wheelchair'];
             return next();
         })
         .catch(err => next({

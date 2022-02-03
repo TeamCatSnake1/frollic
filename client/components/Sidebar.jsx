@@ -7,8 +7,8 @@ const mapStateTopProps = state => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  getResults: (location, radius, categories) => {
-    dispatch(actions.getResults(location, radius, categories));
+  getResults: (location, radius, categories, accommodations) => {
+    dispatch(actions.getResults(location, radius, categories, accommodations));
   }
 });
 
@@ -21,12 +21,13 @@ const Sidebar = (props) => {
 
     let categories = '';
     const accommodations = [];
+    console.log(checkboxes.length)
     checkboxes.forEach((el) => {
-      if (el.variant === 'locType') categories += ',' + el.name
-      else if (el.variant === 'accType') accommodations.push(el.name)
+      if (el.className === 'locType') categories += ',' + el.name
+      else if (el.className === 'accType') accommodations.push(el.name)
     });
     categories = categories.slice(1);
-    console.log('location', location, 'radius', radius, 'categories', categories)
+
     props.getResults(location, radius, categories, accommodations);
   }
 
@@ -34,7 +35,7 @@ const Sidebar = (props) => {
     const output = [];
     props.accommodationsArray.forEach((accom, ind) => {
       output.push(<div className="checkbox" key={`aCB${ind}`}>
-        <input type="checkbox" name={accom} variant="accType"></input>
+        <input type="checkbox" name={accom} className="accType"></input>
         <label>{accom}</label><br/>
       </div>)
     })
@@ -67,42 +68,42 @@ const Sidebar = (props) => {
           <p className="side-header">What type of locations are you looking for?</p>
           <div className="checkboxes">
             <div className="checkbox">
-            <input type="checkbox" name="galleries"></input>
+            <input type="checkbox" name="galleries" className="locType"></input>
             <label htmlFor="Galleries">Art Galleries</label><br/>
             </div>
 
             <div className="checkbox">
-            <input type="checkbox" name="bars" variant="locType"></input>
-            <label htmlFor="Bar" variant="locType">Bar</label><br/>
+            <input type="checkbox" name="bars" className="locType"></input>
+            <label htmlFor="Bar" >Bar</label><br/>
             </div>
           
             <div className="checkbox">
-            <input type="checkbox" name="coffee" variant="locType"></input>
+            <input type="checkbox" name="coffee" className="locType"></input>
             <label htmlFor="Coffee &amp; Tea">Coffee &amp; Tea</label><br/>
             </div>
           
             <div className="checkbox">
-            <input type="checkbox" name="desserts" variant="locType"></input>
+            <input type="checkbox" name="desserts" className="locType"></input>
             <label htmlFor="Desserts">Desserts</label><br/>
             </div>
           
             <div className="checkbox">
-            <input type="checkbox" name="restaurants" variant="locType"></input>
+            <input type="checkbox" name="restaurants" className="locType"></input>
             <label htmlFor="Restaurants">Restaurants</label><br/>
             </div>
 
             <div className="checkbox">
-            <input type="checkbox" name="movietheaters" variant="locType"></input>
+            <input type="checkbox" name="movietheaters" className="locType"></input>
             <label htmlFor="Cinema">Cinema</label><br/>
             </div>
 
             <div className="checkbox">
-            <input type="checkbox" name="musicvenues" variant="locType"></input>
+            <input type="checkbox" name="musicvenues" className="locType"></input>
             <label htmlFor="Music Venues">Music Venues</label><br/>
             </div>
 
             <div className="checkbox">
-            <input type="checkbox" name="shopping" variant="locType"></input>
+            <input type="checkbox" name="shopping" className="locType"></input>
             <label htmlFor="Shopping">Shopping</label><br/>
             </div>
 
