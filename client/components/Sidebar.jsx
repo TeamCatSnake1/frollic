@@ -20,14 +20,14 @@ const Sidebar = (props) => {
     const checkboxes = document.querySelectorAll('input[type=checkbox]:checked');
 
     let categories = '';
-    const accommodations = [];
+    const accomms = [];
     checkboxes.forEach((el) => {
       if (el.variant === 'locType') categories += ',' + el.name
-      else if (el.variant === 'accType') accommodations.push(el.name)
+      else if (el.variant === 'accType') accomms.push(el.name)
     });
     categories = categories.slice(1);
     console.log('location', location, 'radius', radius, 'categories', categories)
-    props.getResults(location, radius, categories, accommodations);
+    props.getResults(location, radius, categories, accomms);
   }
 
   const buildAccommodationsBoxes = () => {

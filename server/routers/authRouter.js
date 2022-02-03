@@ -7,7 +7,7 @@ const authRouter = express.Router();
 
 
 //router for login
-authRouter.get('/', authController.verifyUser, (req, res) => {
+authRouter.post('/login', authController.verifyUser, (req, res) => {
   if (res.locals.valid){
     res.status(200).json(res.locals);
   } else {
@@ -17,7 +17,7 @@ authRouter.get('/', authController.verifyUser, (req, res) => {
 
 
 //router for signup
-authRouter.post('/', authController.addUser, cookieController.setSSIDCookie, sessionController.addSession, (req, res) => {
+authRouter.post('/signUp', authController.addUser, cookieController.setSSIDCookie, sessionController.addSession, (req, res) => {
   res.status(200).json(res.locals);
 })
 
