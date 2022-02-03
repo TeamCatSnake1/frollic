@@ -1,12 +1,24 @@
 const express = require('express');
 const apiController = require('../controllers/apiController.js');
-const router = express.Router();
+const apiRouter = express.Router();
 
 
 //code here  
-router.post('/search', apiController.getResults, (req, res) => {
-  console.log('in the router');
+apiRouter.post('/search', apiController.getResults, apiController.getAccommodationsForVenues, (req, res) => {
   res.status(200).json(res.locals);
 });
 
-module.exports = router;
+apiRouter.post('/add', apiController.addAccommodationToVenue, (req, res) => {
+  console.log('in the accommodation router')
+  // sends back object { value: true }
+  res.status(200).json(res.locals);
+
+})
+
+apiRouter.post('/acc', apiController.addNewAccommodation, (req, res) => {
+  console.log('in add new accomodation router');
+  // sends back object { value: true }
+  res.status(200).json(res.locals);
+})
+
+module.exports = apiRouter;

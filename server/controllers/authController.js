@@ -46,8 +46,13 @@ authController.addUser = (req, res, next) =>{
 };
 
 authController.verifyUser = (req, res, next) =>{
+    //skip verifying user if SSID was validated
+    if (res.locals.SSIDValidated === true){
+        return next();
+    }
 
-//code to verify user
+
+    //code to verify user
     const { username, password } = req.body;
    
 
@@ -68,7 +73,7 @@ authController.verifyUser = (req, res, next) =>{
 
             // let bytes = CryptoJS.AES.decrypt(ciphertext, 'secret key 123');
 
-// let orig = bytes.toString(CryptoJS.enc.Utf8);
+            // let orig = bytes.toString(CryptoJS.enc.Utf8);
             return next()
         })
         .catch (err => next({
