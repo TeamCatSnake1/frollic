@@ -1,7 +1,28 @@
 import * as types from '../constants/actionTypes';
 import axios from 'axios';
 
-export const addAccommodation = (venueId, accommodation, accomType) => dispatch => {
+export const logout = () => dispatch => {
+  axios({
+    method: 'POST',
+    url: `/logout`,
+    headers: { 'Content-Type': 'application/JSON' },
+    data: {}
+  })
+  .then((response) => {
+    if (response.valid) {
+      dispatch({
+        type: types.CHANGE_PAGE,
+        payload: { page: 'signUp' }
+      });
+    }
+    else window.alert('Failed to logout. Please try again or wait for your session to expire.');
+  }).catch(err => {
+    console.log(err);
+    window.alert('Failed to logout. Please try again or wait for your session to expire.');
+  })
+}
+
+export const addAccommodation = (venueId, accommodation, accomType, venueName) => dispatch => {
   axios({
     method: 'POST',
     url: `/api/add`,
@@ -18,7 +39,8 @@ export const addAccommodation = (venueId, accommodation, accomType) => dispatch 
         payload: {
           venueId: venueId,
           accommodation: accommodation,
-          accomType: accomType
+          accomType: accomType,
+          venueName: venueName
         }
       });
     }
@@ -40,7 +62,6 @@ export const getResults = (location, radius, categories, accommodations) => (dis
     }
   })
   .then((response) => {
-    console.log(response.data)
     dispatch({
       type: types.GET_RESULTS,
       payload: response.data,
@@ -49,7 +70,6 @@ export const getResults = (location, radius, categories, accommodations) => (dis
 };
 
 export const createAccount = (username, password, displayName, location) => dispatch => {
-  console.log('username', username, 'password', password, 'display name', displayName, 'location', location)
   if (!username || !password || !displayName || !location) return dispatch({ type: types.UNSUCCESSFUL_AUTH})
   else {
     axios({
@@ -76,7 +96,7 @@ export const createAccount = (username, password, displayName, location) => disp
   }
 }
 
-export const login = (username, password) => dispatch => {
+export const login = (username, password, cookieAuth = false) => dispatch => {
   if (!username || !password) return dispatch({ type: types.UNSUCCESSFUL_AUTH })
   else {
     axios({
@@ -95,8 +115,11 @@ export const login = (username, password) => dispatch => {
       })
       dispatch(changePage('main'));
     }).catch((err) => {
-      console.log(err);
-      dispatch({ type: types.UNSUCCESSFUL_AUTH });
+      if (cookieAuth) return;
+      else {
+        console.log(err);
+        dispatch({ type: types.UNSUCCESSFUL_AUTH });
+      }
     })
   }
 }

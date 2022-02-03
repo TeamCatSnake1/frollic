@@ -51,7 +51,7 @@ const ResultCard = (props) => {
         <CopyToClipboard text={props.url}>
           <button className="share" onClick={(e) => {e.target.innerText = 'Copied!'; setTimeout(() => {e.target.innerText = 'Share'}, 1000) }}>Share</button>
         </CopyToClipboard>
-        <OnClickForm venueId={props.venueId} />
+        <OnClickForm venueId={props.venueId} venueName={props.name} />
       </div>
     </article>
   );
