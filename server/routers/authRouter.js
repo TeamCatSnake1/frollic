@@ -7,6 +7,7 @@ const authRouter = express.Router();
 
 
 //router for login
+
 authRouter.post('/login', sessionController.verifySession, authController.verifyUser, (req, res) => {
   if (res.locals.valid){
     res.status(200).json(res.locals);
