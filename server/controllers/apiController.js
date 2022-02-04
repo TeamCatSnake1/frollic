@@ -60,15 +60,34 @@ apiController.getResults = (req, res, next) => {
 //not tested
 apiController.getAccommodationsForVenues = (req, res, next) => {
 
+  let showAllAccoms = false;
   //skip querying for accomms if none were requested
-  if (!req.body.accommodations){
-    return next();
-  }
+  if (req.body.accommodations[0] === undefined){
+    console.log('no accomms')
+    showAllAccoms = true;
+  } 
+  console.log('should show all accoms?', showAllAccoms)
+  // else if (req.body.accommodations.length === 1 && req.body.accommodations[0] === 'Wheelchair Accessible'){
+
+  //   //we would need to attach Wheelchair Accessible to everything in res.locals
+  //   return next();
+  // }
 
   const { accommodations } = req.body;
+  
+  const accomObj = {};
+  if (showAllAccoms === false){
+    for (let i = 0; i < accommodations.length; i++){
+      let addedAcc = accommodations[i];
+      if (!accomObj.hasOwnProperty(accommodations[i])){
+        accomObj[addedAcc] = true;
+      }
+    }
+  }
 
   try {
     multipleQuery();
+
   } catch {
     next({
       log: `apiController.getAccommodationsForVenues: ERROR: ${typeof err === 'object' ? JSON.stringify(err) : err}`,
@@ -77,51 +96,84 @@ apiController.getAccommodationsForVenues = (req, res, next) => {
   }
 
   async function multipleQuery() {
-    for (let i = 0; i < res.locals.length; i++){
-    let venueId = res.locals[i].id;
-    let queryText = `
-                      SELECT * FROM accommodation 
-                      INNER JOIN venue_accommodation ON accommodation.accommodation=venue_accommodation.accommodation
-                      INNER JOIN venue ON venue_accommodation."venueId"=venue."venueId"
-                      WHERE venue."venueId"='${venueId}';
-                    `
-    await db.query(queryText)
+    res.locals.matches = {
+      perfectMatches: [],
+      imperfectMatches: []
+    };
+    const accumulatedAcc = {};
+    for (let i = 0; i < res.locals.length; i++) {
+      let venueId = res.locals[i].id;
+      let queryText = `
+                        SELECT * FROM accommodation 
+                        INNER JOIN venue_accommodation ON accommodation.accommodation=venue_accommodation.accommodation
+                        INNER JOIN venue ON venue_accommodation."venueId"=venue."venueId"
+                        WHERE venue."venueId"='${venueId}';
+                      `
+      await db.query(queryText)
       .then(result =>{
-        //result.rows comin back currrently as...
-        // add the accommodation information to res.locals 
-          // [{... id: SULHf6nGQ8sK0UpG1XU30w, accommodation: ['wheelchair', "braille"]}]
-        /*
-        [0] [
-        [0] [
-        [0]   {
-        [0]     accommodation: 'wheelchair ramps',
-        [0]     accommodationType: 'mobility',
-        [0]     id: 6,
-        [0]     venueId: 'SULHf6nGQ8sK0UpG1XU30w',
-        [0]     venueName: 'Los Tacos No.1'
-        [0]   }
+            for (let j = 0; j < result.rows.length; j++){
+              console.log('result.row[j].accommodation ', result.rows[j].accommodation)
+              if (!accumulatedAcc.hasOwnProperty(venueId)){
+                accumulatedAcc[venueId] = [];
+              }
+              if (accomObj.hasOwnProperty(result.rows[j].accommodation) && showAllAccoms === false){
+                accumulatedAcc[venueId].push(result.rows[j].accommodation)
+              } else {
+                accumulatedAcc[venueId].push(result.rows[j].accommodation)
+              }
+            }            
+        })
+        .catch(err => next({
+          log: `apiController.multipleQuery: ERROR: ${typeof err === 'object' ? JSON.stringify(err) : err}`,
+          message: {err: 'Error at apiController.multipleQuery. Check server logs for details.'}
+      }));
+      
+    }
 
-          {
-            braille menus
-            venueId
+    for (let i = 0; i < res.locals.length; i++){
+      if (accumulatedAcc.hasOwnProperty(res.locals[i].id) && showAllAccoms === false){
+        res.locals[i].accommodations = [...new Set(accumulatedAcc[res.locals[i].id])]
+        console.log('building response')
+          if (res.locals[i].accommodations.length === accommodations.length){
+            res.locals.matches.perfectMatches.push(res.locals[i])
+          } else if (res.locals[i].accommodations.length > 0){
+            res.locals.matches.imperfectMatches.push(res.locals[i])
           }
-        [0] ]
-        //res.locals needs to be populated here
-        */
-
-
-      })
-      .catch(err => next({
-        log: `apiController.multipleQuery: ERROR: ${typeof err === 'object' ? JSON.stringify(err) : err}`,
-        message: {err: 'Error at apiController.multipleQuery. Check server logs for details.'}
-    }));
-    
-  }
-  return next();
+      } else if (showAllAccoms === true) {
+        res.locals.matches.perfectMatches.push(res.locals[i])
+      }
+    }
+    console.log('time to call next')
+    return next();
   }
 
 
 }
+
+            
+            //res.locals.matches.push(accummulatedAcc[venueId]);
+
+            // for (let j = 0; j < result.rows.length; j++){
+            //   if (!accumulatedAcc.hasOwnProperty(result.rows[j].venueId)){
+            //     accumulatedAcc[result.rows[j].venueId] = [];
+            //   }
+            //   accumulatedAcc[result.rows[j].venueId].push(result.rows[j].accommodation)
+            // }
+
+            // console.log('finished building accum obj')
+
+            //   if (accumulatedAcc.hasOwnProperty(venueId)){
+            //     res.locals[i][accommodations] = accumulatedAcc[venueId]
+            //   }
+            //   if (res.locals[i][accommodations].length === accommodations.length){
+            //     res.locals.matches.perfectMatches.push(res.locals[i])
+            //   } else if (res.locals[i][accommodations].length < accommodations.length && 
+            //             res.locals[i][accommodations].length > 0){
+            //     res.locals.matches.imperfectMatches.push(res.locals[i])
+            //   }
+
+            
+
 
 apiController.addAccommodationToVenue = (req, res, next) => {
 
@@ -243,3 +295,47 @@ apiController.addAccommodationToVenue = (req, res, next) => {
 
 
 module.exports = apiController;
+
+
+
+          //then we push that into perfect matches or imperfect matches whether the # of accoms (.length) matches accommodations.length
+        //   {
+        //   venueId: [array of accoms],
+        //   venueId2: ...
+
+        // }
+        // [
+        //   {1 + accomms}xx --> push into res.locals.matches.perfectMatches
+        //   {2}
+        //   {3}x  --> push into res.locals.matches.imperfectMatches
+        //   {4}
+        //   {5}x
+        // ]
+
+      
+        // res.locals -- [ { id: , accommodations: []}, { id:  } ]
+      
+        // key: venueID, perfect []-> push accoms 
+
+        //result.rows comin back currrently as...
+        // add the accommodation information to res.locals 
+          // [{... id: SULHf6nGQ8sK0UpG1XU30w, accommodation: ['wheelchair', "braille"]}]
+        /*
+        [0] [
+        [0] [
+        [0]   {
+        [0]     accommodation: 'wheelchair ramps',
+        [0]     accommodationType: 'mobility',
+        [0]     id: 6,
+        [0]     venueId: 'SULHf6nGQ8sK0UpG1XU30w',
+        [0]     venueName: 'Los Tacos No.1'
+        [0]   }
+
+          {
+            braille menus
+            venueId
+          }
+        [0] ]
+        //res.locals needs to be populated here
+        */
+
