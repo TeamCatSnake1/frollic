@@ -7,7 +7,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  changePage: (payload) => dispatch(actions.changePage(payload))
+  changePage: (payload) => dispatch(actions.changePage(payload)),
+  logout: () => dispatch(actions.logout())
 });
 
 const Navbar = (props) => {
@@ -16,6 +17,7 @@ const Navbar = (props) => {
 
     if (props.currPage === 'main') props.changePage('profile');
     else if (props.currPage === 'profile') props.changePage('main');
+    else (props.logout());
   }
 
   return (

@@ -2,6 +2,7 @@ import * as types from '../constants/actionTypes';
 
 const initialState = {
   searchResults: [],
+  imperfectResults: [],
   favorites: [],
   savedResults: [],
   favsPageOn: false,
@@ -34,8 +35,10 @@ const mainReducer = (state = initialState, action) => {
     return {
         ...state,
         firstRender: false,
-        searchResults: action.payload,
-      }
+        searchResults: action.payload, //.perfectResults
+        // imperfectResults: action.payload.imperfectResults
+      }// action.payload.perfectResults and action.payload.imperfectResults
+
     case types.ADD_FAV:
       const newFavs = state.favorites.slice();
 
