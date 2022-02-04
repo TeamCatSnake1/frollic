@@ -6,7 +6,7 @@ const apiRouter = express.Router();
 //code here  
 apiRouter.post('/search', apiController.getResults, apiController.getAccommodationsForVenues, (req, res) => {
   console.log('responding')
-  res.status(200).json(res.locals.matches.perfectMatches);
+  res.status(200).json(res.locals.matches);
 });
 
 apiRouter.post('/add', apiController.addAccommodationToVenue, (req, res) => {
