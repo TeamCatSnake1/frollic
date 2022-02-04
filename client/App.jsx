@@ -34,7 +34,7 @@ const App = (props) => {
     <section>
       <Navbar />
       {currPage}
-      <button onClick={() => props.changePage('main')}>Dev skip to main page</button>
+      {/* <button onClick={() => props.changePage('main')}>Dev skip to main page</button> */}
     </section>
   )
 };

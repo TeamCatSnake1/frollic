@@ -14,7 +14,6 @@ const MainContainer = (props) => {
     <section id="main-container">
       <Sidebar/>
       <ResultsContainer/>
-      <h1>{`Hello ${props.displayName} signed in as ${props.username} at ${props.location}`}</h1>
     </section>
   )
 }
