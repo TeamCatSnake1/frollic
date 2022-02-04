@@ -30,6 +30,12 @@ const userReducer = (state = initialState, action) => {
         ...state,
         failedAuthStatement: 'Authentication failed please try again.'
       }
+    
+    case types.CHANGE_PAGE:
+      return {
+        ...state,
+        failedAuthStatement: '',
+      }
 
     default:
       return state;
