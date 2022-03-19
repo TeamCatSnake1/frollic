@@ -5,6 +5,8 @@ import * as actions from '../actions/actions';
 
 const mapStateToProps = (state) => ({
   searchResults: state.search.searchResults,
+  partialResults: state.search.partialResults,
+  noResults: state.search.noResults,
   firstRender: state.search.firstRender,
 });
 
@@ -14,6 +16,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   addComment: (comment) => {
     dispatch(actions.addComment(comment));
+  },
+  loadMore: () => {
+    dispatch(actions.loadMore())
   }
 });
 
@@ -51,11 +56,11 @@ const ResultsContainer = (props) => {
       venueId={resultObj.id}
     />
   });
-  
   return (
     <section id="results-container">
       <h3 id="result-word">Results: </h3>
       {resultCards}
+      {props.partialResults.length > 0 ? <button id="search" onClick={() => props.loadMore()}>Display more?</button> : null}
     </section>
   );
 }

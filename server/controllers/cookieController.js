@@ -2,12 +2,10 @@ const cookieController = {};
 
 cookieController.setSSIDCookie = (req, res, next) =>{
     if (res.locals.SSIDValidated === true){
-        console.log('skipping cookie generation, SSID was validated')
         return next();
     }
 
     if (!res.locals.valid){
-        console.log('setSSIDCookie: invalid user, skipping cookie generation')
         return next();
     }
 
@@ -27,7 +25,7 @@ cookieController.setSSIDCookie = (req, res, next) =>{
     //generate response cookie, attach to res.locals so session middleware can access and create a session
     res.cookie('ssid', newSSID, { httpOnly: true });
     res.locals.ssid = newSSID;
-    console.log('Setting a cookie: ', res.locals.ssid)
+
 
     next();
 

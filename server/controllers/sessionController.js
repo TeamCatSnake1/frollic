@@ -4,32 +4,18 @@ const sessionController = {};
 
 sessionController.addSession = (req, res, next) =>{
     if (res.locals.SSIDValidated){
-        console.log('skipping session generation, SSID was validated')
         return next();
     }
     if (!res.locals.valid){
-        console.log('addSession: invalid user, skipping session generation')
         return next();
     }
 
-//should follow cookie generation ONLY
-//SO -- res.locals.ssid will have the ssid on it
-//and cookies are only generated once a user is logged in
-//so we can check res.locals.username as well
-
-//can also assume we will not get here if a valid session already exists.
-
 const { ssid, username } = res.locals;
-const expiry = Date.now() + (60000*2) //expires in 2 mins -- for testing.
-
-//I have not done UPDATE before. Dunno if this is gonna work? We can create a session row for each user
-//at and only at the time we generate the user acct too.
-//This way when we make a session there is no conflict with trying to add a user that already exists.
+const expiry = Date.now() + (60000*2) 
 db.query(`
     UPDATE public.user SET "sessionId"='${ssid}', "sessionExpiration"=${expiry} WHERE username='${username}';
     `)
     .then((result) => {
-        console.log('update db ')
         return next();
     })
     .catch(err => next({
@@ -38,10 +24,11 @@ db.query(`
     }));
 };
 
+
+
 sessionController.verifySession = (req, res, next) =>{
     //no cookies -> no session. just skip to user verification.
     if (!req.cookies.ssid){
-        console.log('verifySession: no cookie found, skipping session verification.')
         res.locals.SSIDValidated = false;
         res.locals.username = req.body.username;
         return next()

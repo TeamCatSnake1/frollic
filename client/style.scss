@@ -115,7 +115,7 @@ a:hover  {
 }
 
 #main-container {
-  height: 100%;
+  height: calc(100vh - 80px);
 }
 
 #loginPageContainer {
@@ -141,6 +141,7 @@ aside {
    position: fixed;
    margin-top: 75px;
    padding: 40px;
+   width: 22%;
    height: 100%;
    background-color:#FFFCF5;
    display: flex;
@@ -242,7 +243,7 @@ input[type=checkbox]{
 
 
 #results-container {
-  margin-left: 425px;
+  margin-left: 485px;
   display: flex;
   flex-direction: column;
   flex-basis: 300px;
@@ -258,7 +259,7 @@ input[type=checkbox]{
   justify-content: center;
   align-items: center;
   background: url("./assets/background.gif") $gold repeat center;
-  height: 100vh;
+  height: 100%;
   padding: 40px;
 }
 

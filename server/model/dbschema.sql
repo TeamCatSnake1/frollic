@@ -1,10 +1,10 @@
-CREATE TABLE "public.user" (
+CREATE TABLE "user" (
 	"username" VARCHAR(255) NOT NULL UNIQUE,
 	"password" VARCHAR(255) NOT NULL,
 	"displayName" VARCHAR(255) NOT NULL,
 	"defaultLocation" VARCHAR(255) NOT NULL,
 	"sessionId" VARCHAR(255) NOT NULL,
-	"sessionExpiration" integer NOT NULL,
+	"sessionExpiration" bigint NOT NULL,
 	CONSTRAINT "user_pk" PRIMARY KEY ("username")
 ) WITH (
   OIDS=FALSE
@@ -12,7 +12,7 @@ CREATE TABLE "public.user" (
 
 
 
-CREATE TABLE "public.user_accommodations" (
+CREATE TABLE "user_accommodations" (
 	"id" serial NOT NULL,
 	"username" VARCHAR(255) NOT NULL,
 	"accommodation" VARCHAR(255) NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE "public.user_accommodations" (
 
 
 
-CREATE TABLE "public.venue" (
+CREATE TABLE "venue" (
 	"venueId" VARCHAR(255) NOT NULL,
 	"venueName" VARCHAR(255) NOT NULL,
 	CONSTRAINT "venue_pk" PRIMARY KEY ("venueId")
@@ -33,7 +33,7 @@ CREATE TABLE "public.venue" (
 
 
 
-CREATE TABLE "public.accommodation" (
+CREATE TABLE "accommodation" (
 	"accommodation" VARCHAR(255) NOT NULL,
 	"accommodationType" VARCHAR(255) NOT NULL,
 	CONSTRAINT "accommodation_pk" PRIMARY KEY ("accommodation")
@@ -43,7 +43,7 @@ CREATE TABLE "public.accommodation" (
 
 
 
-CREATE TABLE "public.venue_accommodation" (
+CREATE TABLE "venue_accommodation" (
 	"id" serial NOT NULL,
 	"accommodation" VARCHAR(255) NOT NULL,
 	"venueId" VARCHAR(255) NOT NULL,

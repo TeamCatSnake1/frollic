@@ -3,12 +3,13 @@ import { connect } from 'react-redux';
 import * as actions from '../actions/actions';
 
 const mapStateTopProps = state => ({
-  accommodationsArray: state.user.accommodations
+  accommodationsArray: state.user.accommodations,
+  defaultLocation: state.user.location,
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  getResults: (location, radius, categories, accommodations) => {
-    dispatch(actions.getResults(location, radius, categories, accommodations));
+  getResults: (location, radius, categories, accommodations, defaultLocation) => {
+    dispatch(actions.getResults(location, radius, categories, accommodations, defaultLocation));
   }
 });
 
@@ -18,6 +19,7 @@ const Sidebar = (props) => {
     const location = document.querySelector('input[name="location"]').value;
     const radius = document.querySelector('select[name="radius"]').value;
     const checkboxes = document.querySelectorAll('input[type=checkbox]:checked');
+    const defaultLocation = props.defaultLocation;
 
     let categories = '';
     const accommodations = [];
@@ -27,7 +29,7 @@ const Sidebar = (props) => {
     });
     categories = categories.slice(1);
 
-    props.getResults(location, radius, categories, accommodations);
+    props.getResults(location, radius, categories, accommodations, defaultLocation);
   }
 
   const buildAccommodationsBoxes = () => {
@@ -41,7 +43,8 @@ const Sidebar = (props) => {
 
     return output;
   }
-  //  onSubmit={() => {return false}}
+
+
   return (
     <aside>
       <form>

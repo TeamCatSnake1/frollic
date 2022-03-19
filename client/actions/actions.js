@@ -51,17 +51,17 @@ export const addAccommodation = (venueId, accommodation, accomType, venueName) =
   });
 };
 
-export const getResults = (location, radius, categories, accommodations) => (dispatch) => {
+export const getResults = (location, radius, categories, accommodations, defaultLocation) => (dispatch) => {
   axios({
     method: 'POST',
     url: `/api/search`,
     headers: { 'Content-Type': 'application/JSON' },
     data: {
-      // accomodations: []
       location: location,
       radius: radius,
       categories: categories,
-      accommodations: accommodations
+      accommodations: accommodations,
+      defaultLocation: defaultLocation,
     }
   })
   .then((response) => {
@@ -132,6 +132,10 @@ export const addFav = (favorite) => ({
   type: types.ADD_FAV,
   payload: favorite,
 });
+
+export const loadMore = () => ({
+  type: types.LOAD_MORE,
+})
 
 export const toggleFavsPage = () => ({
   type: types.TOGGLE_FAVS_PAGE,

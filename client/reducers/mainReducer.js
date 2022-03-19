@@ -2,6 +2,8 @@ import * as types from '../constants/actionTypes';
 
 const initialState = {
   searchResults: [],
+  partialResults: [],
+  noResults: [],
   favorites: [],
   savedResults: [],
   favsPageOn: false,
@@ -23,6 +25,16 @@ const mainReducer = (state = initialState, action) => {
         searchResults
       }
 
+    case types.LOAD_MORE:
+      let newDisplay = state.searchResults.concat(state.partialResults)
+      let newPartials = state.noResults;
+      return {
+        ...state,
+        searchResults: newDisplay,
+        partialResults: newPartials,
+        noResults: [],
+      }
+
     case types.CHANGE_PAGE:
       return {
         ...state,
@@ -30,11 +42,19 @@ const mainReducer = (state = initialState, action) => {
       }
 
     case types.GET_RESULTS:
+      const partials = action.payload.partialMatches;
+      let noResults = action.payload.noMatch;
+      if (partials.length === 0 && noResults.length > 1){
+        partials.concat(noResults);
+        noResults = [];
+      }
 
     return {
         ...state,
         firstRender: false,
-        searchResults: action.payload,
+        searchResults: action.payload.perfectMatches,
+        partialResults: partials,
+        noResults: noResults,
       }
     case types.ADD_FAV:
       const newFavs = state.favorites.slice();

@@ -46,12 +46,10 @@ authController.addUser = (req, res, next) =>{
 };
 
 authController.verifyUser = (req, res, next) =>{
-    //skip verifying user if SSID was validated
     if (res.locals.SSIDValidated === true){
         return next();
     }
     if (res.locals.SSIDValidated === false && req.body.username === 'cookieEvaluation'){
-       console.log('verifyUser: attempted login via cookie, session validation failed')
        res.locals.failedCookie = true;
        res.locals.valid = false;
        return next();
@@ -73,7 +71,6 @@ authController.verifyUser = (req, res, next) =>{
                 res.locals.displayName = result.rows[0].displayName;
                 res.locals.defaultLocation = result.rows[0].defaultLocation;
                 res.locals.accommodations = ['wheelchair'] //result.rows[0].accommodations;
-                // res.locals.venues = result.rows[0].venues
 
             }
             

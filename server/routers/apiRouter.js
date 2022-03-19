@@ -4,20 +4,16 @@ const apiRouter = express.Router();
 
 
 //code here  
-apiRouter.post('/search', apiController.getResults, apiController.getAccommodationsForVenues, (req, res) => {
-  res.status(200).json(res.locals);
+apiRouter.post('/search', apiController.getResults, apiController.getAccommodationsForVenues, apiController.accommodationSearch, (req, res) => {
+  res.status(200).json(res.locals.finalized);
 });
 
 apiRouter.post('/add', apiController.addAccommodationToVenue, (req, res) => {
-  console.log('in the accommodation router')
-  // sends back object { value: true }
   res.status(200).json(res.locals);
 
 })
 
 apiRouter.post('/acc', apiController.addNewAccommodation, (req, res) => {
-  console.log('in add new accomodation router');
-  // sends back object { value: true }
   res.status(200).json(res.locals);
 })
 

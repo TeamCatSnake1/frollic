@@ -5,21 +5,22 @@ const apiController = {};
 
 apiController.getResults = (req, res, next) => {
   // console.log(req);
-
+  let wheelchairFlag = false;
 
   const radius = Math.round((req.body.radius || 5) * 1609.34);
-  const location = (req.body.location || 10109);
+  const location = (req.body.location || req.body.defaultLocation);
   const categories = (req.body.categories || []);
-  //check accommodations on req.body
-  //if it contains 'wheelchair_accessible'
+
 
   let wheelchairSearch = '';
-  req.body.accommodations.forEach(element =>{
-    if (element === 'Wheelchair Accessible'){
-      wheelchairSearch = 'wheelchair_acessible';
-    }
-  })
+  
 
+  for (let i = 0; i < req.body.accommodations.length; i++){
+    if (req.body.accommodations[i] === "Wheelchair Accessibility"){
+      wheelchairSearch = 'wheelchair_accessible';
+      wheelchairFlag = true;
+    }
+  }
   axios({
     method: 'GET',
     url: 'https://api.yelp.com/v3/businesses/search',
@@ -29,6 +30,7 @@ apiController.getResults = (req, res, next) => {
       'radius': radius,
       'location': location,
       'categories': categories,
+      'limit': 25,
     },
     headers: {
       // 'Content-Type': 'application/json',
@@ -37,7 +39,7 @@ apiController.getResults = (req, res, next) => {
     },
   })
   .then((response) => {
-    res.locals = response.data.businesses.map((business) => ({
+    res.locals.matches = response.data.businesses.map((business) => ({
         id: business.id,
         name : business.name,
         image : business.image_url,
@@ -49,7 +51,18 @@ apiController.getResults = (req, res, next) => {
         distance :`${Math.round(business.distance * .00062137 * 100) / 100} mi`
     }));
   })
-  .then(() => { next(); })
+  .then((response) =>{
+
+    if (wheelchairFlag){
+      for (let i = 0; i < res.locals.matches.length; i++){
+        res.locals.matches[i].allAccommodations = [];
+        res.locals.matches[i].allAccommodations[0] = 'Wheelchair Accessibility';
+      }
+    }
+  })
+  .then(() => {
+    return next();
+  })
   .catch((err) => next({
       log: `Error in getResults controller: ${err}`,
       message: { err: 'See log for error details'},
@@ -59,14 +72,6 @@ apiController.getResults = (req, res, next) => {
 // 
 //not tested
 apiController.getAccommodationsForVenues = (req, res, next) => {
-
-  //skip querying for accomms if none were requested
-  if (!req.body.accommodations){
-    return next();
-  }
-
-  const { accommodations } = req.body;
-
   try {
     multipleQuery();
   } catch {
@@ -77,51 +82,68 @@ apiController.getAccommodationsForVenues = (req, res, next) => {
   }
 
   async function multipleQuery() {
-    for (let i = 0; i < res.locals.length; i++){
-    let venueId = res.locals[i].id;
+    for (let i = 0; i < res.locals.matches.length; i++){
+    if (!res.locals.matches[i].hasOwnProperty('allAccommodations')){
+      res.locals.matches[i].allAccommodations = [];
+    }
+
+    let venueId = res.locals.matches[i].id;
     let queryText = `
-                      SELECT * FROM accommodation 
+                      SELECT accommodation.accommodation FROM public.accommodation 
                       INNER JOIN venue_accommodation ON accommodation.accommodation=venue_accommodation.accommodation
                       INNER JOIN venue ON venue_accommodation."venueId"=venue."venueId"
                       WHERE venue."venueId"='${venueId}';
                     `
     await db.query(queryText)
-      .then(result =>{
-        //result.rows comin back currrently as...
-        // add the accommodation information to res.locals 
-          // [{... id: SULHf6nGQ8sK0UpG1XU30w, accommodation: ['wheelchair', "braille"]}]
-        /*
-        [0] [
-        [0] [
-        [0]   {
-        [0]     accommodation: 'wheelchair ramps',
-        [0]     accommodationType: 'mobility',
-        [0]     id: 6,
-        [0]     venueId: 'SULHf6nGQ8sK0UpG1XU30w',
-        [0]     venueName: 'Los Tacos No.1'
-        [0]   }
-
-          {
-            braille menus
-            venueId
-          }
-        [0] ]
-        //res.locals needs to be populated here
-        */
-
-
+    .then(result =>{
+        console.log(result.rows)
+        for (let j = 0; j < result.rows.length; j++){
+          res.locals.matches[i].allAccommodations.push(result.rows[j].accommodation)
+        }
+        res.locals.matches[i].allAccommodations = [...new Set(res.locals.matches[i].allAccommodations)]
       })
       .catch(err => next({
         log: `apiController.multipleQuery: ERROR: ${typeof err === 'object' ? JSON.stringify(err) : err}`,
         message: {err: 'Error at apiController.multipleQuery. Check server logs for details.'}
     }));
-    
   }
   return next();
   }
 
 
 }
+
+apiController.accommodationSearch = (req, res, next) => {
+
+  const { accommodations } = req.body;
+  res.locals.finalized = {};
+  res.locals.finalized.perfectMatches = [];
+  res.locals.finalized.partialMatches = [];
+  res.locals.finalized.noMatch = [];
+
+  for (let i = 0; i < res.locals.matches.length; i++){
+    res.locals.matches[i].matchedAccommodations = [];
+    for (let j = 0; j < accommodations.length; j++){
+      for (let l = 0; l < res.locals.matches[i].allAccommodations.length; l++){
+        if (accommodations[j] === res.locals.matches[i].allAccommodations[l]){
+          res.locals.matches[i].matchedAccommodations.push(accommodations[j])
+        }
+      }
+    }
+    if (res.locals.matches[i].matchedAccommodations.length === accommodations.length){
+      res.locals.finalized.perfectMatches.push(res.locals.matches[i]);
+    } else if (res.locals.matches[i].matchedAccommodations.length > 0){
+      res.locals.finalized.partialMatches.push(res.locals.matches[i]);
+    } else {
+      res.locals.finalized.noMatch.push(res.locals.matches[i]);
+    }
+  }
+
+  res.locals.matches = {};
+  return next();
+
+}
+
 
 apiController.addAccommodationToVenue = (req, res, next) => {
 
@@ -202,7 +224,6 @@ apiController.addAccommodationToVenue = (req, res, next) => {
 
     db.query('SELECT accommodation FROM accommodation;')
       .then(result => {
-        console.log(result.rows)
         const accomList = [];
         for (const elem of result.rows){
           accomList.push(elem.accommodation);
@@ -215,31 +236,5 @@ apiController.addAccommodationToVenue = (req, res, next) => {
         message: {err: 'Error at apiController.getAccommodations. Check server logs for details.'}
     }));
   }
-/*
-  POST /ACC
-  req.body { accName: string, accType: string }
-  response { valid: boolean }
-
-/*
-
-// example: INSERT INTO public.user (username, password, "displayName", "defaultLocation", "sessionId", "sessionExpiration") VALUES ($1, $2, $3, $4, $5, $6);`
-//click boxes, only avail accomms are those in DB
-//based on submit
-//vanue into venue table ??? 
-//venue_accomm table
-
-/*
- 
-  INSERT INTO venue_accommodation (venueId, accommodation) VALUES (...);
-  INSERT INTO venue (venueId, venuName)...displayName
-
-
-*/
-
-
-// POST /api/add
-//   req.body { accomodations: [strings], venueId: string, venueName: string }
-//   response = { valid: boolean }
-
 
 module.exports = apiController;
